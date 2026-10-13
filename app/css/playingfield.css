@@ -66,6 +66,8 @@ img.cardImg {
 	padding: 0px;
 	border: 1px solid #a6c980;
 	margin-right: 2px;
+	/* Keep the rows of cards slightly apart: */
+	margin-bottom: calc(4px * var(--board-scale));
 }
 
 .playingfield .row {
