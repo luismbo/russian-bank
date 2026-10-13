@@ -1002,6 +1002,14 @@ export function setGameEventHandlers(game) {
         game.onClickOfKnockButton();
     });
 
+    $(document).off("keydown", ".knockButton");
+    $(document).on("keydown", ".knockButton", function (e) {
+        if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            game.onClickOfKnockButton();
+        }
+    });
+
     $(document).off("click", ".centerPileForKnockProve");
     $(document).on("click", ".centerPileForKnockProve", function () {
         // Remove centerPileForKnockProve class now to avoid double click inconsistency:

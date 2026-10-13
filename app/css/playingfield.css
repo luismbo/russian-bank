@@ -329,6 +329,12 @@ img.cardImg {
 	-o-transition: all .1s ease;
 	transition: all .1s ease;
 	display: none;
+	z-index: 10;
+}
+
+.knockButton:focus {
+	outline: 2px solid #fff;
+	outline-offset: 2px;
 }
 
 .knockButton:active {
