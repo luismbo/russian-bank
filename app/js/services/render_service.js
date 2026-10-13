@@ -19,6 +19,7 @@ import "jquery-ui-touch-punch";
 import i18next from "i18next";
 import * as jokesService from "./jokes_service";
 import * as localStorageService from "./localstorage_service";
+import {CARD_THEMES, DEFAULT_CARD_THEME, getCardImageExtension} from "../config/card_themes";
 import sweetAlert2 from "sweetalert2";
 
 import "tooltipster";
@@ -161,11 +162,6 @@ function closeSettingsMenu() {
     $("#settingsMenu").removeClass("open").attr("aria-hidden", "true");
 }
 
-// Available card themes. Each theme is a folder below app/img/cards containing the
-// 52 cards (<1..52>.svg) plus the two card backs (b1fv.svg / b2fv.svg).
-export const CARD_THEMES = ["original", "plain", "classic", "fourcolour", "ghost", "blue"];
-const DEFAULT_CARD_THEME = "original";
-
 /**
  * Returns the currently selected card theme, falling back to the default if the
  * stored value is unknown (e.g. after a theme has been removed).
@@ -184,12 +180,13 @@ export function preloadImages() {
     var imagesToPreload = [];
 
     const cardTheme = getSelectedCardTheme();
+    const cardImageExtension = getCardImageExtension(cardTheme);
 
     for (let i = 1; i <= 52; i++) {
-        imagesToPreload.push("../img/cards/" + cardTheme + "/" + i + ".svg");
+        imagesToPreload.push("../img/cards/" + cardTheme + "/" + i + cardImageExtension);
     }
-    imagesToPreload.push("../img/cards/" + cardTheme + "/b1fv.svg");
-    imagesToPreload.push("../img/cards/" + cardTheme + "/b2fv.svg");
+    imagesToPreload.push("../img/cards/" + cardTheme + "/b1fv" + cardImageExtension);
+    imagesToPreload.push("../img/cards/" + cardTheme + "/b2fv" + cardImageExtension);
 
     imagesToPreload.push("../img/arrow-left-to-right.png");
     imagesToPreload.push("../img/chip_blackdiamonds.png");
@@ -1100,7 +1097,7 @@ export function setBackgroundImagesToShowOnCenterPiles() {
 
             centerPile.prepend("<span class='aceOrderedOnCenterPile'></span>")
                 .find(".aceOrderedOnCenterPile").css({
-                "background-image": "url(../img/cards/" + cardTheme + "/" + i + ".svg" + ")"
+                "background-image": "url(../img/cards/" + cardTheme + "/" + i + getCardImageExtension(cardTheme) + ")"
             });
         });
     }

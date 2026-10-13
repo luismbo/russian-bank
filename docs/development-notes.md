@@ -189,11 +189,13 @@ The card faces live under `app/img/cards/<theme>/` as individual,
 model as `suitOrder + 4 * (pictureNumber - 1)` (suits C=1, S=2, H=3, D=4; picture
 numbers A=1, K=2, Q=3, J=4, 10=5, 9=6, …, 2=13).
 
-Five themes are bundled:
+Seven themes are bundled:
 
 | id | name | notes |
 | --- | --- | --- |
-| `plain` | Plain | minimal letters/pips; default and smallest |
+| `modern` | Modern | illustrated PNG deck (127×177); default; the deck of zankpatience.net |
+| `plain` | Plain | the game's original deck: letters for court cards, both indices at the top |
+| `minimal` | Minimal | minimal letters/pips; smallest |
 | `classic` | Classic | illustrated court cards |
 | `fourcolour` | Four colour | four-colour suits (accessibility) |
 | `ghost` | Ghost | outlined court cards |
@@ -210,13 +212,13 @@ Implementation:
 - `localstorage_service.js` — `getCardTheme()` / `updateCardTheme()` persist the
   choice under `zpCardTheme`.
 - `render_service.js` — `CARD_THEMES` + `getSelectedCardTheme()` (validates the
-  stored value, falls back to `plain`); `preloadImages()` preloads only the
+  stored value, falls back to `modern`); `preloadImages()` preloads only the
   selected theme; `renderPlayboardCards()` builds the image path
   `../img/cards/<theme>/<n>.svg` and the CSS class `cardImg theme-<theme>`;
   `setBackgroundImagesToShowOnCenterPiles()` uses the theme's aces.
 - `game.html` — a `#selectCardTheme` `<select>` in the settings drawer
   (`.cardDesignRow`); changing it re-preloads and re-renders immediately.
-- `locales/{en,de,fr}.js` — `cardTheme` + `themePlain/themeClassic/themeFourColour/themeGhost/themeBlue`.
+- `locales/{en,de,fr}.js` — `cardTheme` + `themeModern/themePlain/themeMinimal/themeClassic/themeFourColour/themeGhost/themeBlue`.
 
 The previous deck (`app/img/cards_plain/`) was removed. It rendered **both** corner
 indices at the **top**; the new decks put the second index at the **bottom right,

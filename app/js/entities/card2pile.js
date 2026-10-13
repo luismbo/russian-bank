@@ -1,4 +1,5 @@
 import { DeckColor } from '../enums/cardinformation/deckcolor';
+import { getCardImageExtension } from '../config/card_themes';
 
 export class Card2Pile {
     constructor(card, pile) {
@@ -42,7 +43,7 @@ export class Card2Pile {
             tmpPictureString += this.getCard().getDeckcolor() == DeckColor.BLUE ? "b1fv" : "b2fv";
         }
 
-        tmpPictureString += ".svg";
+        tmpPictureString += getCardImageExtension(cardDesign.replace("cards/", ""));
         this._pictureString = tmpPictureString;
     }
 
