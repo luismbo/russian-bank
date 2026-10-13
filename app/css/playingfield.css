@@ -31,6 +31,13 @@ main {
 	margin-right: 0;
 }
 
+/* The board is scaled to fit the viewport, so Bootstrap's column gutters would only
+   steal width from it: */
+.playingfield .row > [class*="col-"] {
+	padding-left: 0;
+	padding-right: 0;
+}
+
 .cardImgWrapper {
 	width: calc(58px * var(--board-scale));
 	height: calc(80px * var(--board-scale));
@@ -71,7 +78,8 @@ img.cardImg {
 }
 
 .pilePanel.hp {
-	width: calc(270px * var(--board-scale));
+	/* As wide as the longest house pile (--hp-cards is set from JS): */
+	width: calc((60px + (var(--hp-cards, 1) - 1) * var(--stack-step, 16px)) * var(--board-scale));
 }
 
 .card.hp_left {
@@ -94,24 +102,13 @@ img.cardImg {
 	position: relative;
 }
 
-@media (max-width: 768px) {
-	.card.hp_right.shifted {
-		margin-left: calc(-28px * var(--board-scale));
-	}
-
-	.card.hp_left.shifted {
-		margin-right: calc(-28px * var(--board-scale));
-	}
+/* Cards of a house pile only show the strip needed to identify them: */
+.card.hp_right.shifted {
+	margin-left: calc((var(--stack-step, 16px) - 58px) * var(--board-scale));
 }
 
-@media (max-width: 480px) {
-	.card.hp_right.shifted {
-		margin-left: calc(-18px * var(--board-scale));
-	}
-
-	.card.hp_left.shifted {
-		margin-right: calc(-18px * var(--board-scale));
-	}
+.card.hp_left.shifted {
+	margin-right: calc((var(--stack-step, 16px) - 58px) * var(--board-scale));
 }
 
 .card.wp, .card.rp, .card.cp {
@@ -146,6 +143,15 @@ img.cardImg {
 
 .playerBoard.PLAYER_B {
 	margin-top: calc(20px * var(--board-scale));
+}
+
+/* Keep the avatars (and progress bars) apart from the cards: */
+.playingfield > .row:first-child .progressbar-wrapper {
+	margin-bottom: calc(8px * var(--board-scale));
+}
+
+.playerBoard.PLAYER_A {
+	margin-top: calc(8px * var(--board-scale));
 }
 
 .playerBoard img {

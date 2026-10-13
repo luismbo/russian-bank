@@ -38,10 +38,12 @@ const DEFAULT_BOARD_NATURAL_HEIGHT = 640;
 const BOARD_MIN_SCALE = 0.3;
 const BOARD_MAX_SCALE = 1.6;
 const BOARD_VIEWPORT_MARGIN = 8;
+// Visible width (in unscaled px) of each card that is covered by the next card of a house
+// pile. Just enough to identify the card. Also exposed to CSS as --stack-step.
+const BOARD_STACK_STEP = 16;
 
 let boardNaturalWidth = DEFAULT_BOARD_NATURAL_WIDTH;
 let boardNaturalHeight = DEFAULT_BOARD_NATURAL_HEIGHT;
-let boardNaturalSizeMeasured = false;
 let boardSizeMeasureRetries = 0;
 const BOARD_SIZE_MEASURE_MAX_RETRIES = 50;
 
@@ -50,6 +52,8 @@ const BOARD_SIZE_MEASURE_MAX_RETRIES = 50;
  * (cards, piles, ...) via the CSS variable --board-scale.
  */
 export function setupResponsiveBoard() {
+    document.documentElement.style.setProperty("--stack-step", BOARD_STACK_STEP + "px");
+
     let resizeTimeout = null;
     $(window).on("resize orientationchange", function () {
         if (resizeTimeout) {
@@ -77,10 +81,14 @@ function updateBoardScale() {
     }
     boardSizeMeasureRetries = 0;
 
-    if (!boardNaturalSizeMeasured) {
-        measureBoardNaturalSize();
-        boardNaturalSizeMeasured = true;
-    }
+    // The house piles are as wide as the longest stack, so the natural width of the
+    // board changes while playing and has to be measured again every time:
+    let longestHousePile = 1;
+    $(".pilePanel.hp").each(function () {
+        longestHousePile = Math.max(longestHousePile, $(this).children(".cardImgWrapper").length);
+    });
+    document.documentElement.style.setProperty("--hp-cards", longestHousePile);
+    measureBoardNaturalSize();
 
     const headerHeight = $("header").outerHeight() || 0;
     const footerHeight = $("footer").outerHeight() || 0;
@@ -316,6 +324,7 @@ export function renderPlayboard(game) {
 
     renderPlayboardPiles();
     renderPlayboardCards(game);
+    updateBoardScale();
     renderKnockButton(game);
     renderPlayerBoards(game, activePlayerChanged);
     updateDragAndDropFunctionality(game);
@@ -1436,16 +1445,7 @@ function getTargetPositionsOfAnimation(idTargetPile, sourceOffset) {
                 y: topMostCardOfTargetPile.offset().top
             };
 
-            const scale = getBoardScale();
-            let base = 12 * scale;
-            // Dynamically reduce overlap when stacks are very wide (mobile)
-            if (window.innerWidth <= 768) {
-                base = 10 * scale;
-            }
-            if (window.innerWidth <= 480) {
-                base = 8 * scale;
-            }
-            const overlappingDistanceBetweenCards = Math.max(base, 6); // tighter overlap to show more of each card beneath
+            const overlappingDistanceBetweenCards = BOARD_STACK_STEP * getBoardScale();
 
             if (idTargetPile.indexOf("LEFT") >= 0) {
                 correctionValue = -1 * overlappingDistanceBetweenCards;
