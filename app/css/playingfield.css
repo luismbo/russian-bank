@@ -316,6 +316,9 @@ img.cardImg {
 .knockButtonPanel {
 	border: 0 none;
 	background: transparent;
+	position: relative;
+	display: inline-block;
+	vertical-align: middle;
 }
 
 .knockButton {
