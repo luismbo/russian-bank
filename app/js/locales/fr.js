@@ -53,6 +53,12 @@ export const i18n_fr = {
     save: "Sauvegarder",
     saved: "Sauvegardé",
     orderAcesOnCenterPiles: "Piles centrales triées",
+    cardTheme: "Thème des cartes :",
+    themePlain: "Simple",
+    themeClassic: "Classique",
+    themeFourColour: "Quatre couleurs",
+    themeGhost: "Fantôme",
+    themeBlue: "Bleu",
     settings: "Paramètres",
     close: "Fermer",
 };

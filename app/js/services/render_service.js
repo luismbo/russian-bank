@@ -153,16 +153,35 @@ function closeSettingsMenu() {
     $("#settingsMenu").removeClass("open").attr("aria-hidden", "true");
 }
 
+// Available card themes. Each theme is a folder below app/img/cards containing the
+// 52 cards (<1..52>.svg) plus the two card backs (b1fv.svg / b2fv.svg).
+export const CARD_THEMES = ["plain", "classic", "fourcolour", "ghost", "blue"];
+const DEFAULT_CARD_THEME = "plain";
+
+/**
+ * Returns the currently selected card theme, falling back to the default if the
+ * stored value is unknown (e.g. after a theme has been removed).
+ */
+export function getSelectedCardTheme() {
+    const storedTheme = localStorageService.getCardTheme();
+    if (storedTheme && CARD_THEMES.indexOf(storedTheme) !== -1) {
+        return storedTheme;
+    }
+    return DEFAULT_CARD_THEME;
+}
+
 // Preload images to allow to play the game in offline mode.
 // All loaded images will be stored to the Browser cache.
 export function preloadImages() {
     var imagesToPreload = [];
 
+    const cardTheme = getSelectedCardTheme();
+
     for (let i = 1; i <= 52; i++) {
-        imagesToPreload.push("../img/cards_plain/" + i + ".svg");
+        imagesToPreload.push("../img/cards/" + cardTheme + "/" + i + ".svg");
     }
-    imagesToPreload.push("../img/cards_plain/b1fv.svg");
-    imagesToPreload.push("../img/cards_plain/b2fv.svg");
+    imagesToPreload.push("../img/cards/" + cardTheme + "/b1fv.svg");
+    imagesToPreload.push("../img/cards/" + cardTheme + "/b2fv.svg");
 
     imagesToPreload.push("../img/arrow-left-to-right.png");
     imagesToPreload.push("../img/chip_blackdiamonds.png");
@@ -262,6 +281,20 @@ export function setupLocalStorageFields(game) {
             localStorageService.updateShowAcesOnCenterPileSorted(false);
         }
     });
+
+    // Card theme:
+    const cardTheme = getSelectedCardTheme();
+    $("#selectCardTheme").val(cardTheme);
+
+    $(document).off("change.localstorage", "#selectCardTheme");
+    $(document).on("change.localstorage", "#selectCardTheme", function () {
+        localStorageService.updateCardTheme($(this).val());
+        preloadImages();
+        renderPlayboard(game);
+        if ($("#checkboxOrderAcesOnCenterPiles").is(":checked")) {
+            setBackgroundImagesToShowOnCenterPiles();
+        }
+    });
 }
 
 function setupTooltipsterTooltips() {
@@ -310,7 +343,9 @@ function renderKnockButton(game) {
 function renderPlayboardCards(game) {
 
     const playboard = game.getPlayboard();
-    const cardDesign = "cards_plain";
+    const cardTheme = getSelectedCardTheme();
+    const cardDesign = "cards/" + cardTheme;
+    const cardDesignClass = "cardImg theme-" + cardTheme;
 
     $('.cardImgWrapper.card').remove();
 
@@ -327,7 +362,7 @@ function renderPlayboardCards(game) {
                     const lastButOneCard2pileElement = card2pileElements[card2pileElements.length - 3];
                     lastButOneCard2pileElement.setPictureString(false, cardDesign);
 
-                    let cardImg = $("<img src='" + lastButOneCard2pileElement.getPictureString() + "' class='cardImg " + cardDesign + "'>");
+                    let cardImg = $("<img src='" + lastButOneCard2pileElement.getPictureString() + "' class='" + cardDesignClass + "'>");
 
                     let cardImgWrapper = $('<span class="cardImgWrapper card rp shifted ui-undraggable"></span>');
                     cardImgWrapper.append(cardImg);
@@ -340,7 +375,7 @@ function renderPlayboardCards(game) {
                     const lastButOneCard2pileElement = card2pileElements[card2pileElements.length - 2];
                     lastButOneCard2pileElement.setPictureString(false, cardDesign);
 
-                    let cardImg = $("<img src='" + lastButOneCard2pileElement.getPictureString() + "' class='cardImg " + cardDesign + "'>");
+                    let cardImg = $("<img src='" + lastButOneCard2pileElement.getPictureString() + "' class='" + cardDesignClass + "'>");
 
                     let cardImgWrapper = $('<span class="cardImgWrapper card rp ui-undraggable"></span>');
                     if (card2pileElements.length <= 2) {
@@ -360,7 +395,7 @@ function renderPlayboardCards(game) {
                         card2pileElement.setPictureString(false, cardDesign);
                     }
 
-                    let cardImg = $("<img src='" + card2pileElement.getPictureString() + "' class='cardImg " + cardDesign + "'>");
+                    let cardImg = $("<img src='" + card2pileElement.getPictureString() + "' class='" + cardDesignClass + "'>");
 
                     let cardImgWrapper = $('<span class="cardImgWrapper card rp ui-undraggable"></span>');
                     if (card2pileElement.isFaceUp()) {
@@ -387,7 +422,7 @@ function renderPlayboardCards(game) {
                 const card2pileElement = card2pileElements[card2pileElements.length - 2];
                 card2pileElement.setPictureString(true, cardDesign);
 
-                let cardImg = $("<img src='" + card2pileElement.getPictureString() + "' class='cardImg " + cardDesign + "'>");
+                let cardImg = $("<img src='" + card2pileElement.getPictureString() + "' class='" + cardDesignClass + "'>");
 
                 let cardImgWrapper = $('<span class="cardImgWrapper card cp ui-undraggable"></span>');
                 cardImgWrapper.append(cardImg);
@@ -404,7 +439,7 @@ function renderPlayboardCards(game) {
                     card2pileElement.setPictureString(false, cardDesign);
                 }
 
-                let cardImg = $("<img src='" + card2pileElement.getPictureString() + "' class='cardImg " + cardDesign + "'>");
+                let cardImg = $("<img src='" + card2pileElement.getPictureString() + "' class='" + cardDesignClass + "'>");
 
                 let cardImgWrapper = $('<span class="cardImgWrapper card cp ui-undraggable"></span>');
                 cardImgWrapper.append(cardImg);
@@ -420,7 +455,7 @@ function renderPlayboardCards(game) {
                 const lastButTwoCard2pileElement = card2pileElements[card2pileElements.length - 3];
                 lastButTwoCard2pileElement.setPictureString(true, cardDesign);
 
-                let cardImg = $("<img src='" + lastButTwoCard2pileElement.getPictureString() + "' class='cardImg " + cardDesign + "'>");
+                let cardImg = $("<img src='" + lastButTwoCard2pileElement.getPictureString() + "' class='" + cardDesignClass + "'>");
 
                 let cardImgWrapper = $('<span class="cardImgWrapper card wp shifted ui-undraggable"></span>');
                 cardImgWrapper.append(cardImg);
@@ -433,7 +468,7 @@ function renderPlayboardCards(game) {
                 const lastButOneCard2pileElement = card2pileElements[card2pileElements.length - 2];
                 lastButOneCard2pileElement.setPictureString(true, cardDesign);
 
-                let cardImg = $("<img src='" + lastButOneCard2pileElement.getPictureString() + "' class='cardImg " + cardDesign + "'>");
+                let cardImg = $("<img src='" + lastButOneCard2pileElement.getPictureString() + "' class='" + cardDesignClass + "'>");
 
                 let cardImgWrapper = $('<span class="cardImgWrapper card wp shifted ui-undraggable"></span>');
                 cardImgWrapper.append(cardImg);
@@ -446,7 +481,7 @@ function renderPlayboardCards(game) {
                 const topCard2pileElement = card2pileElements[card2pileElements.length - 1];
                 topCard2pileElement.setPictureString(true, cardDesign);
 
-                let cardImg = $("<img src='" + topCard2pileElement.getPictureString() + "' class='cardImg " + cardDesign + "'>");
+                let cardImg = $("<img src='" + topCard2pileElement.getPictureString() + "' class='" + cardDesignClass + "'>");
 
                 let cardImgWrapper = $('<span class="cardImgWrapper card wp ui-undraggable"></span>');
                 cardImgWrapper.append(cardImg);
@@ -462,7 +497,7 @@ function renderPlayboardCards(game) {
             for (let card2pileElement of card2pileElements) {
                 card2pileElement.setPictureString(true, cardDesign);
 
-                let cardImg = $("<img src='" + card2pileElement.getPictureString() + "' class='cardImg " + cardDesign + "'>");
+                let cardImg = $("<img src='" + card2pileElement.getPictureString() + "' class='" + cardDesignClass + "'>");
 
                 let cardImgWrapper = $('<span class="cardImgWrapper card ui-undraggable"></span>');
                 cardImgWrapper.append(cardImg);
@@ -1039,6 +1074,8 @@ export function setBackgroundImagesToShowOnCenterPiles() {
 
     $(".aceOrderedOnCenterPile").remove();
 
+    const cardTheme = getSelectedCardTheme();
+
     for (let i = 1; i <= 4; i++) {
         const directions = ['LEFT', 'RIGHT'];
         directions.forEach(function(value) {
@@ -1046,7 +1083,7 @@ export function setBackgroundImagesToShowOnCenterPiles() {
 
             centerPile.prepend("<span class='aceOrderedOnCenterPile'></span>")
                 .find(".aceOrderedOnCenterPile").css({
-                "background-image": "url(../img/cards_plain/" + i + ".svg" + ")"
+                "background-image": "url(../img/cards/" + cardTheme + "/" + i + ".svg" + ")"
             });
         });
     }

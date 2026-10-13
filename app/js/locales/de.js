@@ -53,6 +53,12 @@ export const i18n_de = {
     save: "Speichern",
     saved: "Gespeichert",
     orderAcesOnCenterPiles: "Sortierte Mittelstapel",
+    cardTheme: "Kartendesign:",
+    themePlain: "Schlicht",
+    themeClassic: "Klassisch",
+    themeFourColour: "Vierfarbig",
+    themeGhost: "Geister",
+    themeBlue: "Blau",
     settings: "Einstellungen",
     close: "Schließen",
 };

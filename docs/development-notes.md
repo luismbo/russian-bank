@@ -1,8 +1,9 @@
 # Russian Bank — Developer Notes
 
 This document describes how the project is structured and records the changes and
-decisions made when adding **mobile support** and **automatic GitHub Pages
-deployment**. It is meant as a reference for reviewing those changes later.
+decisions made when adding **mobile support**, **automatic GitHub Pages
+deployment** and **selectable card themes**. It is meant as a reference for
+reviewing those changes later.
 
 ---
 
@@ -42,7 +43,8 @@ files.
     │   ├── footer.css
     │   ├── jquery-ui.slider_custom.css
     │   └── sweetalert2_custom.css
-    ├── img/                  Game artwork (incl. cards_plain/ with the card faces)
+    ├── img/                  Game artwork
+    │   └── cards/<theme>/     Card faces (1.svg…52.svg + b1fv/b2fv backs) per theme
     ├── js/
     │   ├── app.js            Entry point (imports + bootstrap sequence)
     │   ├── game.js           Top-level game orchestration
@@ -178,6 +180,47 @@ The **`app/` folder is the publish root**, so the site is served from
 
 Added the `settings` and `close` keys to `app/js/locales/en.js`, `de.js` and
 `fr.js` (Deutsch: "Einstellungen"/"Schließen", Français: "Paramètres"/"Fermer").
+
+### 4.7 Selectable card themes
+
+The card faces live under `app/img/cards/<theme>/` as individual,
+**self-contained** SVGs named `1.svg`…`52.svg` plus the two card backs
+`b1fv.svg` (blue deck) and `b2fv.svg`. The numeric name is derived from the card
+model as `suitOrder + 4 * (pictureNumber - 1)` (suits C=1, S=2, H=3, D=4; picture
+numbers A=1, K=2, Q=3, J=4, 10=5, 9=6, …, 2=13).
+
+Five themes are bundled:
+
+| id | name | notes |
+| --- | --- | --- |
+| `plain` | Plain | minimal letters/pips; default and smallest |
+| `classic` | Classic | illustrated court cards |
+| `fourcolour` | Four colour | four-colour suits (accessibility) |
+| `ghost` | Ghost | outlined court cards |
+| `blue` | Blue | blue accents |
+
+The decks are generated with `makeadeck.cgi` from <https://www.me.uk/cards/> and
+are dedicated to the **public domain** by their author (Adrian Kennard / RevK).
+The illustrated court art descends from the classic 19th-century Goodall & Son
+designs (the same lineage as the LGPL `svg-cards` set); treat it as public domain
+but keep the attribution.
+
+Implementation:
+
+- `localstorage_service.js` — `getCardTheme()` / `updateCardTheme()` persist the
+  choice under `zpCardTheme`.
+- `render_service.js` — `CARD_THEMES` + `getSelectedCardTheme()` (validates the
+  stored value, falls back to `plain`); `preloadImages()` preloads only the
+  selected theme; `renderPlayboardCards()` builds the image path
+  `../img/cards/<theme>/<n>.svg` and the CSS class `cardImg theme-<theme>`;
+  `setBackgroundImagesToShowOnCenterPiles()` uses the theme's aces.
+- `game.html` — a `#selectCardTheme` `<select>` in the settings drawer
+  (`.cardDesignRow`); changing it re-preloads and re-renders immediately.
+- `locales/{en,de,fr}.js` — `cardTheme` + `themePlain/themeClassic/themeFourColour/themeGhost/themeBlue`.
+
+The previous deck (`app/img/cards_plain/`) was removed. It rendered **both** corner
+indices at the **top**; the new decks put the second index at the **bottom right,
+rotated 180°** as is standard.
 
 ---
 

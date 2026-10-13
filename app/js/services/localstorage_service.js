@@ -167,3 +167,11 @@ export function getShowAcesOnCenterPileSorted() {
 export function updateShowAcesOnCenterPileSorted(isChecked) {
 	localStorage.setItem('zpAcesOnCenterPilesSorted', isChecked);
 }
+
+export function getCardTheme() {
+	return localStorage.getItem('zpCardTheme');
+}
+
+export function updateCardTheme(themeValue) {
+	localStorage.setItem('zpCardTheme', themeValue);
+}
