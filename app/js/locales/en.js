@@ -52,6 +52,7 @@ export const i18n_en = {
     saved: "Saved",
     orderAcesOnCenterPiles: "Sorted center piles",
     cardTheme: "Card theme:",
+    themeOriginal: "Original",
     themePlain: "Plain",
     themeClassic: "Classic",
     themeFourColour: "Four colour",

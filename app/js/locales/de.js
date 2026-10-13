@@ -54,6 +54,7 @@ export const i18n_de = {
     saved: "Gespeichert",
     orderAcesOnCenterPiles: "Sortierte Mittelstapel",
     cardTheme: "Kartendesign:",
+    themeOriginal: "Original",
     themePlain: "Schlicht",
     themeClassic: "Klassisch",
     themeFourColour: "Vierfarbig",

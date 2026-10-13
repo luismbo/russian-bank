@@ -54,6 +54,7 @@ export const i18n_fr = {
     saved: "Sauvegardé",
     orderAcesOnCenterPiles: "Piles centrales triées",
     cardTheme: "Thème des cartes :",
+    themeOriginal: "Original",
     themePlain: "Simple",
     themeClassic: "Classique",
     themeFourColour: "Quatre couleurs",

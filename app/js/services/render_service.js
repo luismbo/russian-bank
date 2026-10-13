@@ -155,8 +155,8 @@ function closeSettingsMenu() {
 
 // Available card themes. Each theme is a folder below app/img/cards containing the
 // 52 cards (<1..52>.svg) plus the two card backs (b1fv.svg / b2fv.svg).
-export const CARD_THEMES = ["plain", "classic", "fourcolour", "ghost", "blue"];
-const DEFAULT_CARD_THEME = "plain";
+export const CARD_THEMES = ["original", "plain", "classic", "fourcolour", "ghost", "blue"];
+const DEFAULT_CARD_THEME = "original";
 
 /**
  * Returns the currently selected card theme, falling back to the default if the
