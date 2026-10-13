@@ -36,7 +36,7 @@ export function setupApp() {
 const DEFAULT_BOARD_NATURAL_WIDTH = 678;
 const DEFAULT_BOARD_NATURAL_HEIGHT = 640;
 const BOARD_MIN_SCALE = 0.3;
-const BOARD_MAX_SCALE = 1;
+const BOARD_MAX_SCALE = 1.2;
 const BOARD_VIEWPORT_MARGIN = 20;
 
 let boardNaturalWidth = DEFAULT_BOARD_NATURAL_WIDTH;
@@ -1436,7 +1436,16 @@ function getTargetPositionsOfAnimation(idTargetPile, sourceOffset) {
                 y: topMostCardOfTargetPile.offset().top
             };
 
-            const overlappingDistanceBetweenCards = 16 * getBoardScale();
+            const scale = getBoardScale();
+            let base = 16 * scale;
+            // Dynamically reduce overlap when stacks are very wide (mobile)
+            if (window.innerWidth <= 768 && base > 20) {
+                base = 14 * scale;
+            }
+            if (window.innerWidth <= 480 && base > 18) {
+                base = 12 * scale;
+            }
+            const overlappingDistanceBetweenCards = Math.max(base, 10); // keep readable on small stacks, avoid excessive spread when zoomed in on wide stacks
 
             if (idTargetPile.indexOf("LEFT") >= 0) {
                 correctionValue = -1 * overlappingDistanceBetweenCards;
