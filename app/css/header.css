@@ -1,4 +1,5 @@
 header {
+    position: relative;
     height: 48px;
     background: #F7BE81;
     background: #F7BE81 -webkit-gradient(radial, center center, 0, center center, 600, from(rgba(0,0,0,0)), to(rgba(0,0,0,0.2)));

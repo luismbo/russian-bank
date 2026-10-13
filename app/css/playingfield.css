@@ -1,24 +1,13 @@
 main {
-	min-height: 800px;
+	min-height: 0;
 	flex: 1;
 	position: relative;
+	overflow: hidden;
 	background: #E1F5A9;
 	background: #E1F5A9 -webkit-gradient(radial, center center, 0, center center, 550, from(rgba(0, 0, 0, 0)), to(rgba(0, 0, 0, 0.3)));
 	background: #E1F5A9 -webkit-radial-gradient(circle, from(rgba(0, 0, 0, 0)), to(rgba(0, 0, 0, 0.3)));
 	background: -moz-radial-gradient(#E1F5A9, #9EAC76);
 	background: -ms-radial-gradient(circle, #E1F5A9, #9EAC76);
-}
-
-@media (min-width: 525px) {
-	main {
-		min-height: 920px;
-	}
-}
-
-@media (min-width: 770px) {
-	main {
-		min-height: 820px;
-	}
 }
 
 .content-wrapper {
@@ -29,21 +18,29 @@ main {
 	width: 100%;
 }
 
+.playingfield {
+	display: block;
+	/* Remove the whitespace between the inline-block piles so that the board
+	   keeps its calculated width independent of the current font size: */
+	font-size: 0;
+	white-space: nowrap;
+}
+
 .content-wrapper .row {
 	margin-left: 0;
 	margin-right: 0;
 }
 
 .cardImgWrapper {
-	width: 58px;
-	height: 80px;
+	width: calc(58px * var(--board-scale));
+	height: calc(80px * var(--board-scale));
 }
 
 img.cardImg {
 
 	vertical-align: baseline;
-	width: 58px;
-	height: 80px;
+	width: calc(58px * var(--board-scale));
+	height: calc(80px * var(--board-scale));
 	image-rendering: -webkit-optimize-contrast;
 
 	/*Avoid Google Chrome on iPad from opening the card image in the current page:*/
@@ -55,33 +52,13 @@ img.cardImg {
 	pointer-events: none;
 }
 
-@media (max-width: 525px) {
-
-	.cardImgWrapper {
-		width: 43px;
-		height: 60px;
-	}
-
-	img.cardImg {
-		width: 43px;
-		height: 60px;
-	}
-}
-
 .pilePanel {
-	min-width: 60px;
-	height: 80px;
+	min-width: calc(60px * var(--board-scale));
+	height: calc(80px * var(--board-scale));
 	display: inline-block;
 	padding: 0px;
 	border: 1px solid #a6c980;
 	margin-right: 2px;
-}
-
-@media (max-width: 525px) {
-	.pilePanel {
-		min-width: 45px;
-		height: 60px;
-	}
 }
 
 .playingfield .row {
@@ -94,19 +71,7 @@ img.cardImg {
 }
 
 .pilePanel.hp {
-	width: 270px;
-}
-
-@media (max-width: 767px) {
-	.pilePanel.hp {
-		width: 233px;
-	}
-}
-
-@media (max-width: 525px) {
-	.pilePanel.hp {
-		width: 160px;
-	}
+	width: calc(270px * var(--board-scale));
 }
 
 .card.hp_left {
@@ -130,35 +95,11 @@ img.cardImg {
 }
 
 .card.hp_right.shifted {
-	margin-left: -44px;
-}
-
-@media (max-width: 767px) {
-	.card.hp_right.shifted {
-		margin-left: -44px;
-	}
-}
-
-@media (max-width: 525px) {
-	.card.hp_right.shifted {
-		margin-left: -33px;
-	}
+	margin-left: calc(-44px * var(--board-scale));
 }
 
 .card.hp_left.shifted {
-	margin-right: -44px;
-}
-
-@media (max-width: 767px) {
-	.card.hp_left.shifted {
-		margin-right: -44px;
-	}
-}
-
-@media (max-width: 525px) {
-	.card.hp_left.shifted {
-		margin-right: -33px;
-	}
+	margin-right: calc(-44px * var(--board-scale));
 }
 
 .card.wp, .card.rp, .card.cp {
@@ -170,41 +111,34 @@ img.cardImg {
 }
 
 .card.wp.shifted {
-	margin-left: -3px;
-}
-
-@media (max-width: 767px) {
-	.card.wp.shifted {
-		margin-left: -2px;
-	}
-}
-
-@media (max-width: 525px) {
-	.card.wp.shifted {
-		margin-left: -1px;
-	}
+	margin-left: calc(-3px * var(--board-scale));
 }
 
 .card.rp.shifted {
-	margin-left: -2px;
+	margin-left: calc(-2px * var(--board-scale));
 	position: absolute;
-}
-
-@media (max-width: 767px) {
-	.card.rp.shifted {
-		margin-left: -2px;
-	}
-}
-
-@media (max-width: 525px) {
-	.card.rp.shifted {
-		margin-left: -2px;
-	}
 }
 
 .playerBoard {
 	display: inline-block;
 	border: 1px solid gray;
+}
+
+.playerBoard.playerBoardInactive {
+	background-color: #E5E5E5;
+}
+
+.playerBoard.playerBoardActive {
+	background-color: #f7dd4c;
+}
+
+.playerBoard.PLAYER_B {
+	margin-top: calc(20px * var(--board-scale));
+}
+
+.playerBoard img {
+	width: calc(40px * var(--board-scale));
+	height: calc(40px * var(--board-scale));
 }
 
 .card.ui-draggable {
@@ -227,7 +161,7 @@ img.cardImg {
 }
 
 .progressbar-wrapper {
-	margin-top: -7px;
+	margin-top: calc(-7px * var(--board-scale));
 }
 
 .ui-progressbar .ui-widget-header {
@@ -241,8 +175,8 @@ img.cardImg {
 
 .progressbar {
 	display: inline-flex;
-	width: 42px;
-	height: 10px;
+	width: calc(42px * var(--board-scale));
+	height: calc(10px * var(--board-scale));
 	border-radius: 0;
 	border: 1px solid #777070 !important;
 	background-color: white;
@@ -320,26 +254,15 @@ img.cardImg {
 
 #changeWastePileAndReservePileIcon {
 	display: inline-block;
-	height: 76px;
-	width: 20px;
+	height: calc(76px * var(--board-scale));
+	width: calc(20px * var(--board-scale));
 }
 
 #changeWastePileAndReservePileIcon img {
-	margin-top: 30px;
+	margin-top: calc(30px * var(--board-scale));
 	position: absolute;
-	margin-left: -10px;
-}
-
-@media (max-width: 480px) {
-	#changeWastePileAndReservePileIcon {
-		height: 56px;
-		width: 16px;
-	}
-	
-	#changeWastePileAndReservePileIcon img {
-		margin-top: 18px;
-		position: absolute;
-	}
+	margin-left: calc(-10px * var(--board-scale));
+	width: calc(20px * var(--board-scale));
 }
 
 .joke {
@@ -390,7 +313,6 @@ img.cardImg {
 	text-decoration: none;
 	background-color: rgba(219, 87, 5, 1);
 	font-size: 12px;
-	padding: 8px;
 	-webkit-border-radius: 8px;
 	-moz-border-radius: 8px;
 	border-radius: 8px;
@@ -398,21 +320,15 @@ img.cardImg {
 	-moz-box-shadow: 0px 9px 0px rgba(219, 31, 5, 1), 0px 9px 25px rgba(0, 0, 0, .7);
 	box-shadow: 0px 9px 0px rgba(219, 31, 5, 1), 0px 9px 25px rgba(0, 0, 0, .7);
 	text-align: center;
-	margin-left: 25px;
-	margin-top: 19px;
+	margin-left: calc(25px * var(--board-scale));
+	margin-top: calc(19px * var(--board-scale));
+	padding: calc(8px * var(--board-scale));
 	-webkit-transition: all .1s ease;
 	-moz-transition: all .1s ease;
 	-ms-transition: all .1s ease;
 	-o-transition: all .1s ease;
 	transition: all .1s ease;
 	display: none;
-}
-
-@media (max-width: 480px) {
-	.knockButton {
-		margin-top: 10px;
-		margin-left: 20px;
-	}
 }
 
 .knockButton:active {

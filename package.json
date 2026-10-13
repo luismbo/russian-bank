@@ -8,7 +8,8 @@
     "url": "https://github.com/RheaMars/russian-bank"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\""
+    "test": "echo \"Error: no test specified\"",
+    "build": "webpack --mode production"
   },
   "author": "",
   "license": "MIT",

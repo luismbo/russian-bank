@@ -3,7 +3,7 @@
     <title></title>
 
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
     <link rel="stylesheet" type="text/css" href="../css/external/bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" href="../css/external/animate.min.css"/>
@@ -18,6 +18,7 @@
     <link rel="stylesheet" type="text/css" href="../css/global.css"/>
     <link rel="stylesheet" type="text/css" href="../css/header.css"/>
     <link rel="stylesheet" type="text/css" href="../css/playingfield.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/settings_menu.css"/>
     <link rel="stylesheet" type="text/css" href="../css/footer.css"/>
 
     <link rel="icon" href="../img/gameLogo.png">
@@ -33,14 +34,8 @@
                 <img id="logoImage" style="display:none" src="../img/gameLogo.png">
                 <h1 id="gameHeadline" style="display:none" data-i18n="[html]russianBank"></h1>
             </span>
-            <span id="selectLanguageWrapper" style="display:none">
-                <img id="flagImage" src="../img/earth.png">
-                <select name="selectLanguage" id="selectLanguage">
-                    <option value="de">Deutsch</option>
-                    <option value="en">English</option>
-					<option value="fr">Français</option>
-                </select>
-            </span>
+            <button type="button" id="openSettingsMenu" class="settingsMenuButton"
+                    data-i18n="[title]settings" aria-label="Settings">&#9776;</button>
         </div>
     </header>
 
@@ -54,8 +49,7 @@
 
                 <div class="row">
                     <div class="col-sm-12 center">
-                        <span class="playerBoard PLAYER_B playerBoardInactive"
-                              style="background-color: #E5E5E5;margin-top:20px;">
+                        <span class="playerBoard PLAYER_B playerBoardInactive">
                             <img src="../img/robot.png">
                         </span>
                         <div class="progressbar-wrapper">
@@ -124,7 +118,7 @@
 
                 <div class="row">
                     <div class="col-sm-12 center">
-                        <span class="playerBoard PLAYER_A playerBoardActive" style="background-color: #f7dd4c">
+                        <span class="playerBoard PLAYER_A playerBoardActive">
                             <img src="../img/user.png">
                         </span>
                         <div class="progressbar-wrapper">
@@ -134,68 +128,94 @@
                 </div>
 
             </span>
+        </div>
+    </main>
 
-            <div class="row center" id="settingsPanel">
+    <div id="settingsMenu" class="settingsMenu" aria-hidden="true">
+        <div class="settingsMenuBackdrop"></div>
+        <div class="settingsMenuPanel" role="dialog" aria-modal="true">
+            <div class="settingsMenuHeader">
+                <h2 class="settingsMenuTitle" data-i18n="[html]settings"></h2>
+                <button type="button" id="closeSettingsMenu" class="settingsMenuClose"
+                        data-i18n="[title]close" aria-label="Close">&times;</button>
+            </div>
 
-                <div class="col-xs-12 col-sm-6 settingsLeft">
+            <div id="settingsPanel" class="settingsMenuContent">
 
-                    <div class="row">
-                        <div class="checkbox">
-                            <label id="labelTutorial"><input type="checkbox" id="checkboxTutorial" value=""><span
-                                        data-i18n="[html]tutorial"/></label>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6 settingsLeft">
+
+                        <div class="row">
+                            <div class="checkbox">
+                                <label id="labelTutorial"><input type="checkbox" id="checkboxTutorial" value=""><span
+                                            data-i18n="[html]tutorial"/></label>
+                            </div>
                         </div>
+
+                        <div class="row">
+                            <button type="button" class="btn btn-md btn-primary newGameButton interruptGameplayAction"
+                                    data-i18n="[html]newGame"></button>
+                        </div>
+
+                        <div class="row mt-10">
+                            <button class="btn btn-default pauseGameButton toPause">
+                                <img src="../img/pause.png" data-i18n="[title]pauseGame" width="18"/>
+                            </button>
+                            <button type="button" class="btn btn-md btn-default statisticsButton interruptGameplayAction"
+                                    data-i18n="[html]statistics"></button>
+                        </div>
+
                     </div>
 
-                    <div class="row">
-                        <button type="button" class="btn btn-md btn-primary newGameButton interruptGameplayAction"
-                                data-i18n="[html]newGame"></button>
-                    </div>
+                    <div class="col-xs-12 col-sm-6 settingsRight">
 
-                    <div class="row mt-10">
-                        <button class="btn btn-default pauseGameButton toPause">
-                            <img src="../img/pause.png" data-i18n="[title]pauseGame" width="18"/>
-                        </button>
-                        <button type="button" class="btn btn-md btn-default statisticsButton interruptGameplayAction"
-                                data-i18n="[html]statistics"></button>
-                    </div>
+                        <div class="row levelRow">
+                            <label data-i18n="[html]levelOfDifficulty"></label>
+                            <select name="selectDifficultyOfGame" id="selectDifficultyOfGame">
+                                <option value="0.0" data-i18n="[html]levelBeginner"></option>
+                                <option value="0.25" data-i18n="[html]levelEasy"></option>
+                                <option value="0.5" data-i18n="[html]levelNormal" selected></option>
+                                <option value="0.75" data-i18n="[html]levelAdvanced"></option>
+                                <option value="1.0" data-i18n="[html]levelProfessional"></option>
+                            </select>
+                            <img src="../img/help.png" class="infoIcon tooltipsterTooltip tooltipLevel"
+                                 data-i18n="[title]tooltipLevel"/>
+                        </div>
 
+                        <div class="row speedRow">
+                            <label data-i18n="[html]speedSlider"></label>
+                            <div class="speedSlider">
+                                <div id="speedSliderText" class="ui-slider-handle"></div>
+                            </div>
+                            <img src="../img/help.png" class="infoIcon tooltipsterTooltip tooltipSpeed"
+                                 data-i18n="[title]tooltipSpeed"/>
+                        </div>
+
+                        <div class="row">
+                            <div class="checkbox">
+                                <label id="labelOrderAcesOnCenterPiles"><input type="checkbox" id="checkboxOrderAcesOnCenterPiles" value=""><span
+                                        data-i18n="[html]orderAcesOnCenterPiles"/></label>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
 
-                <div class="col-xs-12 col-sm-6 settingsRight">
-
-                    <div class="row levelRow">
-                        <label data-i18n="[html]levelOfDifficulty"></label>
-                        <select name="selectDifficultyOfGame" id="selectDifficultyOfGame">
-                            <option value="0.0" data-i18n="[html]levelBeginner"></option>
-                            <option value="0.25" data-i18n="[html]levelEasy"></option>
-                            <option value="0.5" data-i18n="[html]levelNormal" selected></option>
-                            <option value="0.75" data-i18n="[html]levelAdvanced"></option>
-                            <option value="1.0" data-i18n="[html]levelProfessional"></option>
-                        </select>
-                        <img src="../img/help.png" class="infoIcon tooltipsterTooltip tooltipLevel"
-                             data-i18n="[title]tooltipLevel"/>
+                <div class="row settingsLanguageRow">
+                    <div class="col-xs-12 center">
+                        <span id="selectLanguageWrapper">
+                            <img id="flagImage" src="../img/earth.png">
+                            <select name="selectLanguage" id="selectLanguage">
+                                <option value="de">Deutsch</option>
+                                <option value="en">English</option>
+                                <option value="fr">Français</option>
+                            </select>
+                        </span>
                     </div>
-
-                    <div class="row speedRow">
-                        <label data-i18n="[html]speedSlider"></label>
-                        <div class="speedSlider">
-                            <div id="speedSliderText" class="ui-slider-handle"></div>
-                        </div>
-                        <img src="../img/help.png" class="infoIcon tooltipsterTooltip tooltipSpeed"
-                             data-i18n="[title]tooltipSpeed"/>
-                    </div>
-
-                    <div class="row">
-                        <div class="checkbox">
-                            <label id="labelOrderAcesOnCenterPiles"><input type="checkbox" id="checkboxOrderAcesOnCenterPiles" value=""><span
-                                    data-i18n="[html]orderAcesOnCenterPiles"/></label>
-                        </div>
-                    </div>
-
                 </div>
             </div>
         </div>
-    </main>
+    </div>
 
     <footer class="row">
         <div class="footer-wrapper" style="opacity:0">

@@ -26,7 +26,131 @@ import "tooltipster";
 export function setupApp() {
     setGlobalEventHandlers();
     setupTooltipsterTooltips();
+    setupResponsiveBoard();
     effectsOnPageLoad();
+}
+
+// The playing field is scaled via the CSS variable --board-scale so that it always fits
+// into the available viewport (width and height). These constants are only used as a
+// fallback if the natural size of the board can not be measured.
+const DEFAULT_BOARD_NATURAL_WIDTH = 678;
+const DEFAULT_BOARD_NATURAL_HEIGHT = 640;
+const BOARD_MIN_SCALE = 0.3;
+const BOARD_MAX_SCALE = 1;
+const BOARD_VIEWPORT_MARGIN = 20;
+
+let boardNaturalWidth = DEFAULT_BOARD_NATURAL_WIDTH;
+let boardNaturalHeight = DEFAULT_BOARD_NATURAL_HEIGHT;
+let boardNaturalSizeMeasured = false;
+let boardSizeMeasureRetries = 0;
+const BOARD_SIZE_MEASURE_MAX_RETRIES = 50;
+
+/**
+ * Make the playing field fit the current viewport by scaling all its dimensions
+ * (cards, piles, ...) via the CSS variable --board-scale.
+ */
+export function setupResponsiveBoard() {
+    let resizeTimeout = null;
+    $(window).on("resize orientationchange", function () {
+        if (resizeTimeout) {
+            clearTimeout(resizeTimeout);
+        }
+        resizeTimeout = setTimeout(updateBoardScale, 150);
+    });
+
+    // The playing field is hidden until the content wrapper is faded in, so the
+    // natural size can only be measured after the document is ready.
+    $(document).ready(function () {
+        window.setTimeout(updateBoardScale, 0);
+    });
+}
+
+function updateBoardScale() {
+
+    const playingfield = document.querySelector(".playingfield");
+    // Not visible yet (e.g. still loading) - try again later:
+    if (!playingfield || playingfield.getBoundingClientRect().height === 0) {
+        if (boardSizeMeasureRetries++ < BOARD_SIZE_MEASURE_MAX_RETRIES) {
+            window.setTimeout(updateBoardScale, 100);
+        }
+        return;
+    }
+    boardSizeMeasureRetries = 0;
+
+    if (!boardNaturalSizeMeasured) {
+        measureBoardNaturalSize();
+        boardNaturalSizeMeasured = true;
+    }
+
+    const headerHeight = $("header").outerHeight() || 0;
+    const footerHeight = $("footer").outerHeight() || 0;
+
+    const availableWidth = window.innerWidth - BOARD_VIEWPORT_MARGIN;
+    const availableHeight = window.innerHeight - headerHeight - footerHeight - BOARD_VIEWPORT_MARGIN;
+
+    let scale = Math.min(
+        availableWidth / boardNaturalWidth,
+        availableHeight / boardNaturalHeight,
+        BOARD_MAX_SCALE
+    );
+
+    if (!isFinite(scale) || scale <= 0) {
+        scale = BOARD_MAX_SCALE;
+    }
+    scale = Math.max(scale, BOARD_MIN_SCALE);
+
+    document.documentElement.style.setProperty("--board-scale", scale);
+}
+
+/**
+ * Measure the natural (unscaled) size of the playing field so that the scale can be
+ * computed without hardcoding any pixel values.
+ */
+function measureBoardNaturalSize() {
+
+    const root = document.documentElement;
+    const previousScale = root.style.getPropertyValue("--board-scale");
+    root.style.setProperty("--board-scale", "1");
+
+    const playingfield = document.querySelector(".playingfield");
+
+    let minLeft = Infinity;
+    let maxRight = -Infinity;
+
+    playingfield.querySelectorAll(".pilePanel, .playerBoard").forEach(function (element) {
+        const rect = element.getBoundingClientRect();
+        if (!rect.width && !rect.height) {
+            return;
+        }
+        minLeft = Math.min(minLeft, rect.left);
+        maxRight = Math.max(maxRight, rect.right);
+    });
+
+    if (isFinite(minLeft) && isFinite(maxRight)) {
+        boardNaturalWidth = maxRight - minLeft;
+    }
+
+    const measuredHeight = playingfield.getBoundingClientRect().height;
+    if (measuredHeight > 0) {
+        boardNaturalHeight = measuredHeight;
+    }
+
+    root.style.setProperty("--board-scale", previousScale || String(BOARD_MAX_SCALE));
+}
+
+function getBoardScale() {
+    const scale = parseFloat(
+        getComputedStyle(document.documentElement).getPropertyValue("--board-scale")
+    );
+    return isFinite(scale) && scale > 0 ? scale : BOARD_MAX_SCALE;
+}
+
+function openSettingsMenu() {
+    $("#settingsMenu").addClass("open").attr("aria-hidden", "false");
+}
+
+function closeSettingsMenu() {
+    $("#settingsMenu").removeClass("open").attr("aria-hidden", "true");
 }
 
 // Preload images to allow to play the game in offline mode.
@@ -474,6 +598,20 @@ function updateDragAndDropFunctionality(game) {
  */
 export function setGlobalEventHandlers() {
 
+    $(document).on("click", "#openSettingsMenu", function () {
+        openSettingsMenu();
+    });
+
+    $(document).on("click", "#closeSettingsMenu, .settingsMenuBackdrop", function () {
+        closeSettingsMenu();
+    });
+
+    $(document).on("keyup", function (e) {
+        if (e.keyCode === 27) {
+            closeSettingsMenu();
+        }
+    });
+
     $(document).on("dragstart", ".ui-undraggable, #logoImage, .playerBoard img", function () {
         return false;
     });
@@ -493,6 +631,8 @@ export function setGlobalEventHandlers() {
     });
 
     $(document).on("click", ".newGameButton", function () {
+
+        closeSettingsMenu();
 
         let dialogTitle = i18next.t("newGame");
         let dialogContent = i18next.t("areYouSure");
@@ -616,6 +756,8 @@ export function setGlobalEventHandlers() {
     }
 
     $(document).on("click", ".statisticsButton", function () {
+        closeSettingsMenu();
+
         let dialogTitle = i18next.t("statistics");
         let dialogContent = '';
 
@@ -746,9 +888,10 @@ export function setGlobalEventHandlers() {
     // Short cut SPACE for knocking:
     $(document).keypress(function (e) {
         if (e.charCode == 32) {
+            const settingsMenuOpened = $("#settingsMenu").hasClass("open");
             const activeKnockButton = !$(".knockButton").hasClass("disabledButton") && $(".knockButton").is(":visible");
             const dialogOpened = $(".swal2-modal").is(":visible");
-            if (activeKnockButton && !dialogOpened) {
+            if (activeKnockButton && !dialogOpened && !settingsMenuOpened) {
                 $(".knockButton").trigger("click");
             }
         }
@@ -1248,7 +1391,7 @@ function getTargetPositionsOfAnimation(idTargetPile, sourceOffset) {
                 y: topMostCardOfTargetPile.offset().top
             };
 
-            const overlappingDistanceBetweenCards = 16;
+            const overlappingDistanceBetweenCards = 16 * getBoardScale();
 
             if (idTargetPile.indexOf("LEFT") >= 0) {
                 correctionValue = -1 * overlappingDistanceBetweenCards;

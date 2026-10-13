@@ -53,4 +53,6 @@ export const i18n_fr = {
     save: "Sauvegarder",
     saved: "Sauvegardé",
     orderAcesOnCenterPiles: "Piles centrales triées",
+    settings: "Paramètres",
+    close: "Fermer",
 };

@@ -53,4 +53,6 @@ export const i18n_de = {
     save: "Speichern",
     saved: "Gespeichert",
     orderAcesOnCenterPiles: "Sortierte Mittelstapel",
+    settings: "Einstellungen",
+    close: "Schließen",
 };

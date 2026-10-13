@@ -1,9 +1,15 @@
 
+:root {
+	/* Factor by which the whole playing field is scaled to fit the viewport.
+	   It is computed and updated by the render service on load and on resize. */
+	--board-scale: 1;
+}
+
 body, html {
 	height: 100%;
 	margin: 0;
 	padding: 0;
-	min-width: 360px;
+	overflow-x: hidden;
 }
 
 .wrapper {
@@ -11,18 +17,6 @@ body, html {
 	display: flex;
 	flex-direction: column;
 	-ms-flex-direction: column;
-}
-
-@media (max-width: 767px) {
-	.wrapper.container-fluid {
-		min-width: 643px;
-	}
-}
-
-@media (max-width: 525px) {
-	.wrapper.container-fluid {
-		min-width: 463px;
-	}
 }
 
 * {

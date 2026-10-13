@@ -3,12 +3,10 @@
 <body>
 <script type="text/javascript">
 
-    const getUrl = window.location;
-    const baseUrl = getUrl.protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
-
-    var targetPage = baseUrl + "/app/pages/game.html";
-
-    window.location = targetPage;
+    // Redirect relative to this file so that the URL is correct no matter
+    // whether the game is served from the repository root (development / Docker)
+    // or from the root of a GitHub Pages site (where the "app" folder is the root).
+    window.location = "pages/game.html";
 
 </script>
 </body>

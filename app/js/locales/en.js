@@ -51,4 +51,6 @@ export const i18n_en = {
     save: "Save",
     saved: "Saved",
     orderAcesOnCenterPiles: "Sorted center piles",
+    settings: "Settings",
+    close: "Close",
 };
