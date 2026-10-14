@@ -82,8 +82,9 @@ img.cardImg {
 }
 
 .pilePanel.hp {
-	/* As wide as the longest house pile (--hp-cards is set from JS): */
-	width: calc((60px + (var(--hp-cards, 1) - 1) * var(--stack-step, 16px)) * var(--board-scale));
+	/* As wide as the longest house pile (--hp-cards is set from JS). The extra 2px
+	   keep sub-pixel rounding from wrapping the last (floated) card to a new line: */
+	width: calc((62px + (var(--hp-cards, 1) - 1) * var(--stack-step, 16px)) * var(--board-scale));
 }
 
 .card.hp_left {
