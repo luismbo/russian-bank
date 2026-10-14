@@ -66,6 +66,8 @@ img.cardImg {
 	padding: 0px;
 	border: 1px solid #a6c980;
 	margin-right: 2px;
+	/* Align the inline-flex center piles with the inline-block house piles: */
+	vertical-align: top;
 	/* Keep the rows of cards slightly apart: */
 	margin-bottom: calc(4px * var(--board-scale));
 }
@@ -321,31 +323,27 @@ img.cardImg {
 	pointer-events: none;
 }
 
-.knockButtonPanel {
-	border: 0 none;
-	background: transparent;
-	position: relative;
-	display: inline-block;
-	vertical-align: middle;
-}
-
 .knockButton {
 	cursor: pointer;
 	position: absolute;
+	/* Bottom right corner (bottom left in left-handed mode), within thumb's reach: */
+	right: 16px;
+	bottom: 24px;
+	min-width: 76px;
 	color: rgba(255, 255, 255, 1);
 	text-decoration: none;
 	background-color: rgba(219, 87, 5, 1);
-	font-size: 12px;
-	-webkit-border-radius: 8px;
-	-moz-border-radius: 8px;
-	border-radius: 8px;
+	font-size: 16px;
+	font-weight: bold;
+	line-height: 1.2;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
 	-webkit-box-shadow: 0px 9px 0px rgba(219, 31, 5, 1), 0px 9px 25px rgba(0, 0, 0, .7);
 	-moz-box-shadow: 0px 9px 0px rgba(219, 31, 5, 1), 0px 9px 25px rgba(0, 0, 0, .7);
 	box-shadow: 0px 9px 0px rgba(219, 31, 5, 1), 0px 9px 25px rgba(0, 0, 0, .7);
 	text-align: center;
-	margin-left: calc(25px * var(--board-scale));
-	margin-top: calc(19px * var(--board-scale));
-	padding: calc(8px * var(--board-scale));
+	padding: 16px 18px;
 	-webkit-transition: all .1s ease;
 	-moz-transition: all .1s ease;
 	-ms-transition: all .1s ease;
@@ -353,6 +351,11 @@ img.cardImg {
 	transition: all .1s ease;
 	display: none;
 	z-index: 10;
+}
+
+#content.leftHanded .knockButton {
+	right: auto;
+	left: 16px;
 }
 
 .knockButton:focus {

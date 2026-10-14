@@ -53,6 +53,7 @@ export const i18n_de = {
     save: "Speichern",
     saved: "Gespeichert",
     orderAcesOnCenterPiles: "Sortierte Mittelstapel",
+    leftHandedMode: "Linkshänder-Modus (Klopfen-Knopf links)",
     cardTheme: "Kartendesign:",
     themeModern: "Modern",
     themePlain: "Schlicht",

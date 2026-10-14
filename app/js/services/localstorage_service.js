@@ -175,3 +175,10 @@ export function getCardTheme() {
 export function updateCardTheme(themeValue) {
 	localStorage.setItem('zpCardTheme', themeValue);
 }
+export function getLeftHandedMode() {
+	return localStorage.getItem('zpLeftHandedMode');
+}
+
+export function updateLeftHandedMode(isChecked) {
+	localStorage.setItem('zpLeftHandedMode', isChecked);
+}

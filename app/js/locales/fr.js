@@ -53,6 +53,7 @@ export const i18n_fr = {
     save: "Sauvegarder",
     saved: "Sauvegardé",
     orderAcesOnCenterPiles: "Piles centrales triées",
+    leftHandedMode: "Mode gaucher (bouton Toc à gauche)",
     cardTheme: "Thème des cartes :",
     themeModern: "Moderne",
     themePlain: "Simple",

@@ -287,6 +287,17 @@ export function setupLocalStorageFields(game) {
         }
     });
 
+    // Left-handed mode (moves the knock button to the bottom left corner):
+    const leftHanded = localStorageService.getLeftHandedMode() === "true";
+    $("#checkboxLeftHanded").prop('checked', leftHanded);
+    $("#content").toggleClass("leftHanded", leftHanded);
+    $(document).off("change.localstorage", "#checkboxLeftHanded");
+    $(document).on("change.localstorage", "#checkboxLeftHanded", function () {
+        const isChecked = $(this).is(':checked');
+        localStorageService.updateLeftHandedMode(isChecked);
+        $("#content").toggleClass("leftHanded", isChecked);
+    });
+
     // Card theme:
     const cardTheme = getSelectedCardTheme();
     $("#selectCardTheme").val(cardTheme);
@@ -704,7 +715,7 @@ export function setGlobalEventHandlers() {
                     $(".pauseGameButton").removeClass("toResume");
                     $(".pauseGameButton").addClass("toPause");
                     $(".pauseIconBig").hide();
-                    $(".playingfield .row").removeClass("pausedGameModal");
+                    $(".playingfield .row, .knockButton").removeClass("pausedGameModal");
                 }
 
                 // Cleanup for knock stuff and possibly disabled buttons:
@@ -907,7 +918,7 @@ export function setGlobalEventHandlers() {
             $(this).addClass("toResume");
 
             $(".pauseIconBig").show();
-            $(".playingfield .row").addClass("pausedGameModal");
+            $(".playingfield .row, .knockButton").addClass("pausedGameModal");
         } else if ($(this).hasClass("toResume")) {
             $(this).find("img").attr("src", "../img/pause.png");
             let buttonTitle = i18next.t("pauseGame");
@@ -916,7 +927,7 @@ export function setGlobalEventHandlers() {
             $(this).addClass("toPause");
 
             $(".pauseIconBig").hide();
-            $(".playingfield .row").removeClass("pausedGameModal");
+            $(".playingfield .row, .knockButton").removeClass("pausedGameModal");
 
             resumeGameAnimation();
         }

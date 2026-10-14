@@ -41,6 +41,9 @@
 
     <main class="row" id="content">
 
+        <!-- Lives in the bottom corner of the main area so it can be reached with the thumb: -->
+        <span class="knockButton" role="button" tabindex="0" aria-label="Knock" data-i18n="[html]knockButtonText;[title]toolTipKnockButton"></span>
+
         <div class="content-wrapper" style="display:none">
 
             <img src="../img/pauseBig.png" class="pauseIconBig"/>
@@ -108,10 +111,6 @@
                             <img src="../img/arrow-left-to-right.png"/>
                         </a>
                         <span id="WASTE_PILE_PLAYER_A" class="pilePanel wp"></span>
-
-                        <span class="knockButtonPanel" data-i18n="[title]toolTipKnockButton">
-                            <span class="knockButton" role="button" tabindex="0" aria-label="Knock" data-i18n="[html]knockButtonText"></span>
-                        </span>
 
                     </div>
                 </div>
@@ -189,6 +188,13 @@
                             </div>
                             <img src="../img/help.png" class="infoIcon tooltipsterTooltip tooltipSpeed"
                                  data-i18n="[title]tooltipSpeed"/>
+                        </div>
+
+                        <div class="row">
+                            <div class="checkbox">
+                                <label id="labelLeftHanded"><input type="checkbox" id="checkboxLeftHanded" value=""><span
+                                        data-i18n="[html]leftHandedMode"/></label>
+                            </div>
                         </div>
 
                         <div class="row">

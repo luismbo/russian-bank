@@ -51,6 +51,7 @@ export const i18n_en = {
     save: "Save",
     saved: "Saved",
     orderAcesOnCenterPiles: "Sorted center piles",
+    leftHandedMode: "Left-handed mode (knock button on the left)",
     cardTheme: "Card theme:",
     themeModern: "Modern",
     themePlain: "Plain",
