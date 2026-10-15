@@ -87,12 +87,21 @@ img.cardImg {
 	width: calc((62px + (var(--hp-cards, 1) - 1) * var(--stack-step, 16px)) * var(--board-scale));
 }
 
-.card.hp_left {
-	float: right;
+/* House piles are non-wrapping flex rows (reversed for the left piles, which grow towards
+   the left). Floats would push the last card onto a new line whenever sub-pixel rounding
+   makes the stack a hair wider than the panel, which happens at small board scales: */
+.pilePanel.hp {
+	display: inline-flex;
+	flex-wrap: nowrap;
 }
 
-.card.hp_right {
-	float: left;
+.pilePanel.hp[id^="HOUSE_PILE_LEFT"] {
+	flex-direction: row-reverse;
+}
+
+.card.hp_left, .card.hp_right {
+	float: none;
+	flex: 0 0 auto;
 }
 
 .card.cp {
